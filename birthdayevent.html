@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>祝贺徐子弘生日！快闪抽赏活动</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --chiikawa-bg: #FFFDF5;
+            --chiikawa-pink: #FFB7C5;
+            --chiikawa-blue: #A3D8F4;
+            --chiikawa-yellow: #FFE066;
+            --text-color: #5D5D5D;
+            --card-bg: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Fredoka', 'ZCOOL KuaiLe', sans-serif;
+            background-color: var(--chiikawa-bg);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(var(--chiikawa-pink) 15%, transparent 16%),
+                              radial-gradient(var(--chiikawa-blue) 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+        }
+
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            background: #fff;
+            width: 85%;
+            border-radius: 30px;
+            box-shadow: 0 8px 20px rgba(255, 183, 197, 0.3);
+            margin-top: 20px;
+            margin-bottom: 30px;
+            border: 3px solid var(--chiikawa-pink);
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--text-color);
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+            line-height: 1.4;
+        }
+
+        .price-tag {
+            display: inline-block;
+            margin-top: 10px;
+            background: var(--chiikawa-yellow);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 1rem;
+            color: #6B5D38;
+            font-weight: bold;
+        }
+
+        .prize-pool {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 10px;
+        }
+
+        .prize-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        .rank-A { border-color: var(--chiikawa-yellow); background: #FFFDE5; }
+        .rank-B { border-color: var(--chiikawa-blue); }
+        .rank-C { border-color: var(--chiikawa-pink); }
+        .rank-D, .rank-E { border-color: #E0E0E0; }
+
+        .prize-icon { font-size: 3rem; opacity: 0.8; margin-bottom: 10px; }
+        .prize-text { font-size: 0.8rem; color: #999; font-weight: bold; }
+
+        .action-area {
+            margin-top: 20px;
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .draw-btn {
+            background: linear-gradient(to bottom, var(--chiikawa-pink), #FF9EAC);
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.5rem;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Fredoka', 'ZCOOL KuaiLe', sans-serif;
+            box-shadow: 0 6px 0 #FF8FA0, 0 15px 20px rgba(255, 183, 197, 0.4);
+            transition: all 0.1s;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+        }
+
+        .draw-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #FF8FA0, inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .draw-btn:disabled {
+            background: #ccc;
+            box-shadow: none;
+            transform: translateY(6px);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .result-card {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 30px;
+            text-align: center;
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 80%;
+            max-width: 300px;
+            border: 5px solid var(--chiikawa-pink);
+            box-shadow: 0 10px 30px rgba(255, 183, 197, 0.5);
+            position: relative;
+        }
+
+        .modal-overlay.active .result-card {
+            transform: scale(1);
+        }
+
+        .result-rank {
+            font-size: 5rem;
+            font-weight: 900;
+            margin: 0;
+            line-height: 1;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+        }
+
+        .result-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #5D5D5D;
+        }
+
+        .result-icon {
+            font-size: 5rem;
+            margin: 10px 0;
+            display: block;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .close-btn {
+            background: var(--chiikawa-blue);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #8BC8EC;
+        }
+
+        .close-btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .shaking {
+            animation: shake 0.3s ease-in-out infinite;
+        }
+
+        .highlight {
+            transform: scale(1.1);
+            z-index: 5;
+            box-shadow: 0 0 20px var(--chiikawa-yellow);
+            border-color: var(--chiikawa-yellow);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>祝贺徐子弘生日！快闪抽赏活动</h1>
+        <div class="price-tag">单抽 8元/次</div>
+    </header>
+
+    <div class="prize-pool" id="prizePool">
+        <!-- 奖品卡片将由JavaScript生成 -->
+    </div>
+
+    <div class="action-area">
+        <button class="draw-btn" id="drawBtn">开始抽奖！</button>
+    </div>
+
+    <div class="modal-overlay" id="resultModal">
+        <div class="result-card" id="resultCard">
+            <div class="result-icon" id="resIcon">🎁</div>
+            <div class="result-rank" id="resRank">A赏</div>
+            <div class="result-name" id="resName">奖品名称</div>
+            <button class="close-btn" onclick="closeModal()">开心收下</button>
+        </div>
+    </div>
+
+    <script>
+        // 所有9个实物奖品
+        const allPrizes = [
+            { rank: 'A', name: '百变怪松软抱抱', icon: '🟣', color: '#FFE066' },
+            { rank: 'B', name: '啤酒盲盒', icon: '🍺', color: '#A3D8F4' },
+            { rank: 'B', name: 'Eva收纳箱', icon: '📦', color: '#A3D8F4' },
+            { rank: 'C', name: '乌萨奇果冻灯', icon: '🐰', color: '#FFB7C5' },
+            { rank: 'C', name: '拓麻歌子', icon: '🥚', color: '#FFB7C5' },
+            { rank: 'D', name: '多米卡寿司车', icon: '🍣', color: '#E0E0E0' },
+            { rank: 'D', name: '多米卡高达车', icon: '🤖', color: '#E0E0E0' },
+            { rank: 'E', name: '什么猫挂件', icon: '🐱', color: '#E0E0E0' },
+            { rank: 'E', name: '皮卡丘自然野趣', icon: '⚡', color: '#E0E0E0' }
+        ];
+
+        // 特殊结果
+        const specialResult = { rank: '💥', name: '咣！收下老婆亲亲一枚下次再努力吧！', icon: '💋', color: '#FF69B4' };
+
+        // 游戏状态
+        let specialCount = 0; // 记录抽到特殊结果的次数
+        let aPrizeUnlocked = false; // A赏是否已解锁
+        let remainingPrizes = [...allPrizes]; // 还未被抽走的奖品
+
+        const poolElement = document.getElementById('prizePool');
+        const btn = document.getElementById('drawBtn');
+        const modal = document.getElementById('resultModal');
+
+        // 初始化页面，显示所有奖品
+        function initPool() {
+            poolElement.innerHTML = '';
+            allPrizes.forEach(prize => {
+                const card = document.createElement('div');
+                card.className = `prize-card rank-${prize.rank}`;
+                card.innerHTML = `
+                    <div class="prize-icon">${prize.icon}</div>
+                    <div class="prize-text">${prize.rank}赏</div>
+                `;
+                poolElement.appendChild(card);
+            });
+        }
+
+        // 核心抽奖逻辑
+        function startDraw() {
+            btn.disabled = true;
+            btn.innerText = "正在拆盒...";
+
+            // 模拟抽奖动画
+            let shakeCount = 0;
+            const maxShakes = 10;
+            const cards = document.querySelectorAll('.prize-card');
+
+            const shakeInterval = setInterval(() => {
+                cards.forEach(el => el.classList.remove('shaking'));
+                const randomCard = cards[Math.floor(Math.random() * cards.length)];
+                randomCard.classList.add('shaking');
+
+                shakeCount++;
+                if (shakeCount > maxShakes) {
+                    clearInterval(shakeInterval);
+                    determineAndShowResult(cards);
+                }
+            }, 150);
+        }
+
+        function determineAndShowResult(cards) {
+            let result;
+            let winningCardIndex = -1;
+
+            // 1. 判断是否触发特殊结果 (20% 概率)
+            const isSpecial = Math.random() < 0.2;
+
+            if (isSpecial) {
+                result = specialResult;
+                specialCount++;
+                // 检查是否解锁A赏
+                if (specialCount >= 2) {
+                    aPrizeUnlocked = true;
+                }
+            } else {
+                // 2. 未触发特殊结果，从还未被抽走的奖品中随机
+                // 如果A赏未解锁，则从除了A赏以外的奖品中抽取
+                let availablePrizes = aPrizeUnlocked ? remainingPrizes : remainingPrizes.filter(p => p.rank !== 'A');
+
+                // 安全检查：防止奖池为空
+                if (availablePrizes.length === 0) {
+                     alert("所有奖品都已被抽完！");
+                     btn.disabled = false;
+                     btn.innerText = "再抽一次";
+                     return;
+                }
+
+                const randomIndex = Math.floor(Math.random() * availablePrizes.length);
+                result = availablePrizes[randomIndex];
+                
+                // 找到这个奖品在原始allPrizes中的索引，用于高亮
+                winningCardIndex = allPrizes.findIndex(p => p.name === result.name);
+                
+                // 从剩余奖品中移除这个奖品
+                remainingPrizes = remainingPrizes.filter(p => p.name !== result.name);
+            }
+
+            showResult(result, winningCardIndex, cards);
+        }
+
+        function showResult(result, index, cards) {
+            cards.forEach(el => el.classList.remove('shaking'));
+
+            // 如果抽中的是实物奖品，则高亮对应的卡片
+            if (index !== -1) {
+                const winningCard = cards[index];
+                winningCard.classList.add('highlight');
+            }
+
+            // 填充弹窗
+            document.getElementById('resRank').innerText = result.rank;
+            document.getElementById('resRank').style.color = result.color;
+            document.getElementById('resName').innerText = result.name;
+            document.getElementById('resIcon').innerText = result.icon;
+
+            const resultCard = document.getElementById('resultCard');
+            resultCard.style.borderColor = result.color;
+
+            modal.classList.add('active');
+
+            btn.disabled = false;
+            btn.innerText = "再抽一次";
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            // 关闭弹窗时，移除所有高亮
+            document.querySelectorAll('.prize-card').forEach(el => el.classList.remove('highlight'));
+        }
+
+        // 页面加载
+        initPool();
+        
+        // 正确绑定按钮点击事件
+        btn.addEventListener('click', startDraw);
+    </script>
+</body>
+</html>
